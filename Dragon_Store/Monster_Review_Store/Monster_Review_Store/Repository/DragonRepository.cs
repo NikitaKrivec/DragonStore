@@ -12,12 +12,37 @@ namespace Monster_Review_Store.Repository
             _context = context;
         }
 
-        public Monster GetMonster(int id)
+        public bool CreateDragon(int ownerId, int categoryId, Monster dragon)
+        {
+            var dragonOwnerEntity = _context.Owners.Where(o => o.Id == ownerId).FirstOrDefault();
+            var category = _context.Categories.Where(c => c.Id == categoryId).FirstOrDefault();
+
+            var dragonOwner = new MonsterOwner()
+            {
+                Owner = dragonOwnerEntity,
+                Monster = dragon,
+            };
+
+            _context.Add(dragonOwner);
+
+            var dragonCategory = new MonsterCategory()
+            {
+                Category = category,
+                Monsters = dragon,
+            };
+
+            _context.Add(dragonCategory);
+            _context.Add(dragon);
+
+            return Save();
+        }
+
+        public Monster GetDragon(int id)
         {
             return _context.Monster.Where(m => m.Id == id).FirstOrDefault();
         }
 
-        public Monster GetMonster(string name)
+        public Monster GetDragon(string name)
         {
             return _context.Monster.Where(m => m.Name == name).FirstOrDefault();
         }
@@ -32,7 +57,7 @@ namespace Monster_Review_Store.Repository
             return ((decimal)review.Sum(r => r.Mark) / review.Count());
         }
 
-        public ICollection<Monster> GetMonsters()
+        public ICollection<Monster> GetDragons()
         {
             return _context.Monster.OrderBy(m => m.Id).ToList();
         }
@@ -40,6 +65,24 @@ namespace Monster_Review_Store.Repository
         public bool MonsterExists(int dragonId)
         {
             return _context.Monster.Any(m => m.Id == dragonId); 
+        }
+
+        public bool Save()
+        {
+            var save = _context.SaveChanges();
+            return save > 0 ? true : false;
+        }
+
+        public bool UpdateDragon(int ownerId, int categoryId, Monster dragon)
+        {
+            _context.Update(dragon);
+            return Save();
+        }
+
+        public bool DeleteDragon(Monster dragon)
+        {
+            _context.Remove(dragon);
+            return Save();
         }
     }
 }

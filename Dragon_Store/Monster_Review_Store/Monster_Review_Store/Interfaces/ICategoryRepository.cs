@@ -8,5 +8,9 @@ namespace Monster_Review_Store.Interfaces
         Category GetCategory(int id);
         ICollection<Monster> GetDragonByCategory(int categoryId);
         bool CategoryExists(int id);
+        bool CreateCategory(Category category);
+        bool UpdateCategory(Category category);
+        bool DeleteCategory(Category category);
+        bool Save();
     }
 }

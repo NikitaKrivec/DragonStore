@@ -126,3 +126,8 @@ C:\Users\Pisinus\Desktop\C#_Api_projects\DragonStore\Dragon_Store\Monster_Review
 C:\Users\Pisinus\Desktop\C#_Api_projects\DragonStore\Dragon_Store\Monster_Review_Store\Monster_Review_Store\obj\Debug\net6.0\Monster_Review_Store.pdb
 C:\Users\Pisinus\Desktop\C#_Api_projects\DragonStore\Dragon_Store\Monster_Review_Store\Monster_Review_Store\obj\Debug\net6.0\Monster_Review_Store.genruntimeconfig.cache
 C:\Users\Pisinus\Desktop\C#_Api_projects\DragonStore\Dragon_Store\Monster_Review_Store\Monster_Review_Store\obj\Debug\net6.0\ref\Monster_Review_Store.dll
+C:\Users\Pisinus\Desktop\C#_Api_projects\DragonStore\Dragon_Store\Monster_Review_Store\Monster_Review_Store\obj\Debug\net6.0\staticwebassets\msbuild.Monster_Review_Store.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Pisinus\Desktop\C#_Api_projects\DragonStore\Dragon_Store\Monster_Review_Store\Monster_Review_Store\obj\Debug\net6.0\staticwebassets\msbuild.build.Monster_Review_Store.props
+C:\Users\Pisinus\Desktop\C#_Api_projects\DragonStore\Dragon_Store\Monster_Review_Store\Monster_Review_Store\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.Monster_Review_Store.props
+C:\Users\Pisinus\Desktop\C#_Api_projects\DragonStore\Dragon_Store\Monster_Review_Store\Monster_Review_Store\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.Monster_Review_Store.props
+C:\Users\Pisinus\Desktop\C#_Api_projects\DragonStore\Dragon_Store\Monster_Review_Store\Monster_Review_Store\obj\Debug\net6.0\staticwebassets.pack.json

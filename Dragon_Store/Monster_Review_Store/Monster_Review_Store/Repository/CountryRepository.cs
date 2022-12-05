@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Monster_Review_Store.Data;
+﻿using Monster_Review_Store.Data;
 using Monster_Review_Store.Interfaces;
 using Monster_Review_Store.Models;
 
@@ -8,11 +7,9 @@ namespace Monster_Review_Store.Repository
     public class CountryRepository : ICountryRepository
     {
         private readonly DataContext _context;
-        private readonly IMapper _mapper;
-        public CountryRepository(DataContext context, IMapper mapper)
+        public CountryRepository(DataContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         public bool CountryExists(int id)
@@ -38,6 +35,30 @@ namespace Monster_Review_Store.Repository
         public ICollection<Owner> GetOwnersFromCountry(int countryId)
         {
             return _context.Owners.Where(C => C.Country.Id == countryId).ToList();
+        }
+
+        public bool CreateCountry(Country country)
+        {
+            _context.Add(country);
+            return Save();
+        }
+        
+        public bool Save()
+        {
+            var save = _context.SaveChanges();
+            return save > 0 ? true : false;
+        }
+
+        public bool UpdateCountry(Country country)
+        {
+            _context.Update(country);
+            return Save();
+        }
+
+        public bool DeleteCountry(Country country)
+        {
+            _context.Remove(country);
+            return Save();
         }
     }
 }

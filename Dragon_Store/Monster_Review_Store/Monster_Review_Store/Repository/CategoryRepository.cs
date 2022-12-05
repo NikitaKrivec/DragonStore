@@ -17,6 +17,18 @@ namespace Monster_Review_Store.Repository
             return _context.Categories.Any(c => c.Id == id);
         }
 
+        public bool CreateCategory(Category category)
+        {
+            _context.Add(category);
+             return Save();
+        }
+
+        public bool DeleteCategory(Category category)
+        {
+            _context.Remove(category);
+            return Save();
+        }
+
         public ICollection<Category> GetCategories()
         {
             return _context.Categories.ToList();
@@ -30,6 +42,18 @@ namespace Monster_Review_Store.Repository
         public ICollection<Monster> GetDragonByCategory(int categoryId)
         {
             return _context.MonsterCategories.Where(e => e.CategoryId == categoryId).Select(d => d.Monsters).ToList();
+        }
+
+        public bool Save()
+        {
+            var save = _context.SaveChanges();
+            return save > 0 ? true : false;
+        }
+
+        public bool UpdateCategory(Category category)
+        {
+            _context.Update(category);
+            return Save();
         }
     }
 }

@@ -8,82 +8,87 @@ namespace Monster_Review_Store.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : Controller
+    public class ReviewerController : Controller
     {
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IReviewerRepository _reviewerRepository;
         private readonly IMapper _mapper;
-        public CategoryController(ICategoryRepository categoryRepository, IMapper mapper)
+
+        public ReviewerController(IReviewerRepository reviewerRepository, IMapper mapper)
         {
-            _categoryRepository = categoryRepository;
+            _reviewerRepository = reviewerRepository;
             _mapper = mapper;
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Category>))]
-        public IActionResult GetCategories()
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Reviewer>))]
+        public IActionResult GetReviewers()
         {
-            var categories = _mapper.Map<List<CategoryDTO>>(_categoryRepository.GetCategories());
+            var reviewers = _mapper.Map<List<ReviewerDTO>>(_reviewerRepository.GetReviewers());
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            return Ok(categories);
+            return Ok(reviewers);
         }
 
-        [HttpGet("{categoryId}")]
-        [ProducesResponseType(200, Type = typeof(Category))]
-        [ProducesResponseType(200)]
-        public IActionResult GetCategory(int categoryId)
+        [HttpGet("{reviewerId}")]
+        [ProducesResponseType(200, Type = typeof(Reviewer))]
+        [ProducesResponseType(400)]
+        public IActionResult GetPokemon(int reviewerId)
         {
-            if (!_categoryRepository.CategoryExists(categoryId))
+            if (!_reviewerRepository.ReviewerExists(reviewerId))
             {
                 return NotFound();
             }
-            var category = _mapper.Map<CategoryDTO>(_categoryRepository.GetCategory(categoryId));
+
+            var reviewer = _mapper.Map<ReviewerDTO>(_reviewerRepository.GetReviewer(reviewerId));
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            return Ok(category);
+            return Ok(reviewer);
         }
 
-        [HttpGet("dragon/{categoryId}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Monster>))]
-        [ProducesResponseType(200)]
-        public IActionResult GetDragonByCategoryId(int categoryId)
+        [HttpGet("{reviewerId}/reviews")]
+        public IActionResult GetReviewsByAReviewer(int reviewerId)
         {
-            var dragons = _mapper.Map<List<DragonDTO>>
-                (_categoryRepository.GetDragonByCategory(categoryId));
+            if (!_reviewerRepository.ReviewerExists(reviewerId))
+            {
+                return NotFound();
+            }
+
+            var reviews = _mapper.Map<List<ReviewDTO>>(
+                _reviewerRepository.GetReviewsByReviewer(reviewerId));
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            return Ok(dragons);
+            return Ok(reviews);
         }
 
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateCategory([FromBody] CategoryDTO newCategory)
+        public IActionResult CreateReviewer([FromBody] ReviewerDTO newReviewer)
         {
-            if (newCategory == null)
+            if (newReviewer == null)
             {
                 return BadRequest(ModelState);
             }
 
-            var category = _categoryRepository.GetCategories()
-                .Where(c => c.Name.Trim().ToUpper() == newCategory.Name.TrimEnd().ToUpper())
+            var reviewer = _reviewerRepository.GetReviewers()
+                .Where(c => c.LastName.Trim().ToUpper() == newReviewer.LastName.TrimEnd().ToUpper())
                 .FirstOrDefault();
 
-            if (category != null)
+            if (reviewer != null)
             {
-                ModelState.AddModelError("", "Category already exists");
+                ModelState.AddModelError("", "Reviewer already exists");
                 return StatusCode(422, ModelState);
             }
 
@@ -92,9 +97,9 @@ namespace Monster_Review_Store.Controllers
                 return BadRequest(ModelState);
             }
 
-            var categoryMap = _mapper.Map<Category>(newCategory);
+            var reviewerMap = _mapper.Map<Reviewer>(newReviewer);
 
-            if (!_categoryRepository.CreateCategory(categoryMap))
+            if (!_reviewerRepository.CreateReviewer(reviewerMap))
             {
                 ModelState.AddModelError("", "Something went wrong");
                 return StatusCode(500, ModelState);
@@ -103,24 +108,23 @@ namespace Monster_Review_Store.Controllers
             return Ok("Successfully created");
         }
 
-
-        [HttpPut("{categoryId}")]
+        [HttpPut("{reviewerId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateCategory(int categoryId, [FromBody] CategoryDTO updatedCategory)
+        public IActionResult UpdateOwner(int reviewerId, [FromBody] ReviewerDTO updatedReviewer)
         {
-            if(updatedCategory == null)
-            {
-                return BadRequest(ModelState);
-            }
-            
-            if(categoryId != updatedCategory.Id)
+            if (updatedReviewer == null)
             {
                 return BadRequest(ModelState);
             }
 
-            if(!_categoryRepository.CategoryExists(categoryId))
+            if (reviewerId != updatedReviewer.Id)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_reviewerRepository.ReviewerExists(reviewerId))
             {
                 return NotFound();
             }
@@ -130,9 +134,9 @@ namespace Monster_Review_Store.Controllers
                 return BadRequest(ModelState);
             }
 
-            var categoryMap = _mapper.Map<Category>(updatedCategory);
+            var reviewerMap = _mapper.Map<Reviewer>(updatedReviewer);
 
-            if(!_categoryRepository.UpdateCategory(categoryMap))
+            if (!_reviewerRepository.UpdateReviewer(reviewerMap))
             {
                 ModelState.AddModelError("", "Something went wrong");
                 return StatusCode(500, ModelState);
@@ -141,25 +145,25 @@ namespace Monster_Review_Store.Controllers
             return Ok("Successfully updated");
         }
 
-        [HttpDelete("{categoryId}")]
+        [HttpDelete("{reviewerId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult DeleteCategory(int categoryId)
+        public IActionResult DeleteReviewer(int reviewerId)
         {
-            if (!_categoryRepository.CategoryExists(categoryId))
+            if (!_reviewerRepository.ReviewerExists(reviewerId))
             {
                 return NotFound();
             }
 
-            var categoryDelete = _categoryRepository.GetCategory(categoryId);
+            var reviewerDelete = _reviewerRepository.GetReviewer(reviewerId);
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            
-            if(!_categoryRepository.DeleteCategory(categoryDelete))
+
+            if (!_reviewerRepository.DeleteReviewer(reviewerDelete))
             {
                 ModelState.AddModelError("", "Something went wrong");
                 return StatusCode(500, ModelState);
